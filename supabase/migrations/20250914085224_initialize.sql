@@ -21,7 +21,7 @@ end$$;
 
 -- user_profiles
 create table if not exists public.user_profiles (
-  uid uuid primary key references auth.users (id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
   first_name text not null,
   last_name text not null,
   suffix text,
@@ -41,7 +41,7 @@ for each row execute function public.set_updated_at();
 
 -- professionals (no embedding column yet)
 create table if not exists public.professionals (
-  uid uuid primary key references auth.users (id) on delete cascade,
+  user_profile_id uuid primary key references public.user_profiles (id) on delete cascade,
   profile_summary text,
   tags text[],
   value_profile text,    -- concatenation of education/work/skills; intended to be maintained via trigger later
@@ -59,7 +59,7 @@ for each row execute function public.set_updated_at();
 -- education
 create table if not exists public.education (
   id uuid primary key default gen_random_uuid(),
-  professional_id uuid not null references public.professionals (uid) on delete cascade,
+  professional_id uuid not null references public.professionals (user_profile_id) on delete cascade,
   school text,
   degree text,           -- can be courses, short courses, etc.
   year int,
@@ -77,7 +77,7 @@ for each row execute function public.set_updated_at();
 -- work_history
 create table if not exists public.work_history (
   id uuid primary key default gen_random_uuid(),
-  professional_id uuid not null references public.professionals (uid) on delete cascade,
+  professional_id uuid not null references public.professionals (user_profile_id) on delete cascade,
   role text,
   organization text,
   summary text,
@@ -97,7 +97,7 @@ for each row execute function public.set_updated_at();
 -- skills
 create table if not exists public.skills (
   id uuid primary key default gen_random_uuid(),
-  professional_id uuid not null references public.professionals (uid) on delete cascade,
+  professional_id uuid not null references public.professionals (user_profile_id) on delete cascade,
   skill text,
   level public.skill_level,
   created_at timestamptz not null default now()
@@ -158,7 +158,7 @@ begin
   update public.professionals p
      set value_profile = v_value_profile,
          updated_at = now()
-   where p.uid = p_professional_id;
+   where p.user_profile_id = p_professional_id;
 end;
 $$;
 
