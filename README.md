@@ -1,6 +1,16 @@
 # bohol_resources
 The goal of the project is to create a directory of professionals and organizations that can help in building almost anything, this is to promote that it's possible to build something in Bohol.
 
+## Requirements
+
+- Node.js v22.x (or newer in the 22 line)
+- Docker
+- npm (bundled with Node.js) or your preferred package manager
+- Supabase CLI (installed globally)
+  - macOS: `brew install supabase/tap/supabase`
+  - or via npm: `npm i -g supabase`
+- Git
+
 ## Project structure
 
 - `app/`: Main application source.
@@ -11,27 +21,6 @@ The goal of the project is to create a directory of professionals and organizati
   - Migrations, table definitions, and SQL functions are tracked here.
   - Configure local/project settings in `supabase/config.toml`.
 
-### Type safety with Supabase
-
-Always keep TypeScript types in sync with your Supabase schema to maintain strict type safety.
-
-Generate types locally:
-
-```bash
-# From repo root
-supabase gen types typescript --schema public > app/src/lib/supabase.types.ts
-```
-
-Run this after any migration/table/function change in `supabase/` and commit the updated types file.
-
-## Requirements
-
-- Node.js v22.x (or newer in the 22 line)
-- npm (bundled with Node.js) or your preferred package manager
-- Supabase CLI (installed globally)
-  - macOS: `brew install supabase/tap/supabase`
-  - or via npm: `npm i -g supabase`
-- Git
 
 ## Getting started
 
@@ -53,7 +42,7 @@ supabase init   # if not already initialized
 supabase start  # starts local services via Docker
 
 # Push database schema and run migrations
-supabase db push
+supabase db push --local
 
 # Generate TypeScript types for strict type safety
 supabase gen types typescript --schema public > app/src/lib/supabase.types.ts
@@ -177,3 +166,16 @@ git push --force-with-lease
 ```
 
 If you'd like a dedicated, longer guide, consider adding a `CONTRIBUTING.md` later. For now, the above is the source of truth.
+
+### Type safety with Supabase
+
+Always keep TypeScript types in sync with your Supabase schema to maintain strict type safety.
+
+Generate types locally:
+
+```bash
+# From repo root
+supabase gen types typescript --schema public > app/src/lib/supabase.types.ts
+```
+
+Run this after any migration/table/function change in `supabase/` and commit the updated types file.
