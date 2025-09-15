@@ -106,6 +106,23 @@ create table if not exists public.skills (
 create index if not exists skills_professional_id_idx
   on public.skills (professional_id);
 
+-- links
+create table if not exists public.links (
+  id uuid primary key default gen_random_uuid(),
+  professional_id uuid not null references public.professionals (user_profile_id) on delete cascade,
+  url text not null,
+  summary text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists links_professional_id_idx
+  on public.links (professional_id);
+
+create trigger links_set_updated_at
+before update on public.links
+for each row execute function public.set_updated_at();
+
 -- =============================================
 -- Aggregate-related data into professionals.value_profile
 -- =============================================
@@ -152,6 +169,15 @@ begin
           and s.skill is not null
       ), ''
     )
+    ||
+    ' | Links: ' || coalesce(
+      (
+        select string_agg(distinct l.summary, '; ')
+        from public.links l
+        where l.professional_id = p_professional_id
+          and l.summary is not null and length(trim(l.summary)) > 0
+      ), ''
+    )
   ) into v_value_profile;
 
   -- Update professionals.value_profile
@@ -189,4 +215,8 @@ for each row execute function public.tg_refresh_value_profile();
 
 create trigger skills_refresh_value_profile
 after insert or update or delete on public.skills
+for each row execute function public.tg_refresh_value_profile();
+
+create trigger links_refresh_value_profile
+after insert or update or delete on public.links
 for each row execute function public.tg_refresh_value_profile();

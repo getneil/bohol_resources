@@ -43,7 +43,42 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
-            referencedColumns: ["uid"]
+            referencedColumns: ["user_profile_id"]
+          },
+        ]
+      }
+      links: {
+        Row: {
+          created_at: string
+          id: string
+          professional_id: string
+          summary: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          professional_id: string
+          summary?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          professional_id?: string
+          summary?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "links_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["user_profile_id"]
           },
         ]
       }
@@ -52,27 +87,35 @@ export type Database = {
           created_at: string
           profile_summary: string | null
           tags: string[] | null
-          uid: string
           updated_at: string
+          user_profile_id: string
           value_profile: string | null
         }
         Insert: {
           created_at?: string
           profile_summary?: string | null
           tags?: string[] | null
-          uid: string
           updated_at?: string
+          user_profile_id: string
           value_profile?: string | null
         }
         Update: {
           created_at?: string
           profile_summary?: string | null
           tags?: string[] | null
-          uid?: string
           updated_at?: string
+          user_profile_id?: string
           value_profile?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "professionals_user_profile_id_fkey"
+            columns: ["user_profile_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       skills: {
         Row: {
@@ -102,7 +145,7 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
-            referencedColumns: ["uid"]
+            referencedColumns: ["user_profile_id"]
           },
         ]
       }
@@ -112,13 +155,13 @@ export type Database = {
           birth_date: string | null
           created_at: string
           first_name: string
+          id: string
           last_name: string
           phone_number: string | null
           photo_url: string | null
           suffix: string | null
           thumb_url: string | null
           title: string | null
-          uid: string
           updated_at: string
         }
         Insert: {
@@ -126,13 +169,13 @@ export type Database = {
           birth_date?: string | null
           created_at?: string
           first_name: string
+          id?: string
           last_name: string
           phone_number?: string | null
           photo_url?: string | null
           suffix?: string | null
           thumb_url?: string | null
           title?: string | null
-          uid: string
           updated_at?: string
         }
         Update: {
@@ -140,13 +183,13 @@ export type Database = {
           birth_date?: string | null
           created_at?: string
           first_name?: string
+          id?: string
           last_name?: string
           phone_number?: string | null
           photo_url?: string | null
           suffix?: string | null
           thumb_url?: string | null
           title?: string | null
-          uid?: string
           updated_at?: string
         }
         Relationships: []
@@ -191,7 +234,7 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "professionals"
-            referencedColumns: ["uid"]
+            referencedColumns: ["user_profile_id"]
           },
         ]
       }
